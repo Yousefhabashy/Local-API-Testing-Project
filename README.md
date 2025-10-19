@@ -23,13 +23,12 @@ The tests validate responses, check performance, and handle dynamic data like au
 
 ## 📁 Project Structure
 
-API-Testing-Project/
+Local-API-Testing-Project/
 │
-├── Admin Collection.postman_collection.json # Contains all API requests and tests
-├── environment.json # Environment variables (base URL, tokens, etc.)
-├── README.md # Project documentation
-└── newman-run-example.txt # Example Newman run command# Local-API-Testing-Project
----
+├── ADMIN Collection.postman_collection.json   
+├── USER Collection.postman_collection.json  
+├── Local.postman_environment.json  
+└── README.md  
 
 ## 🧠 Key Features
 
