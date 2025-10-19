@@ -24,6 +24,7 @@ The tests validate responses, check performance, and handle dynamic data like au
 ## 📁 Project Structure
 
 Local-API-Testing-Project/
+
 ├── ADMIN Collection.postman_collection.json   
 ├── USER Collection.postman_collection.json  
 ├── Local.postman_environment.json  
