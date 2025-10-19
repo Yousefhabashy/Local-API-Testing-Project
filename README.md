@@ -106,5 +106,3 @@ Software Testing Trainee @ DEPI
 🎓 Faculty of Science, Menoufia University
 
 📧 yousefgriezmann58@gmail.com
-
-🔗 LinkedIn
