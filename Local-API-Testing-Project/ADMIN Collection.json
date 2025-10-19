@@ -1,0 +1,433 @@
+{
+  "info": {
+    "_postman_id": "584300e6-e444-4d85-a469-2977672a27d6",
+    "name": "ADMIN Collection",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "48224202",
+    "_collection_link": "https://yousefhabashy2004-7755350.postman.co/workspace/571b2679-100a-44fe-9637-e6f66c7a8870/collection/48224202-584300e6-e444-4d85-a469-2977672a27d6?action=share&source=collection_link&creator=48224202"
+  },
+  "item": [
+    {
+      "name": "Register-New-Admin",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "var requestData = pm.request.body.raw;\r",
+              "let jsonData = JSON.parse(requestData);\r",
+              "\r",
+              "pm.environment.set(\"adminEmail\", jsonData.email);\r",
+              "pm.environment.set(\"adminPassword\", jsonData.password);\r",
+              "\r",
+              "pm.test(\"Account cerated\", function () {\r",
+              "    pm.response.to.have.status(201);\r",
+              "});\r",
+              "\r",
+              "pm.test(\"Response time is less than 200ms\", function () {\r",
+              "    pm.expect(pm.response.responseTime).to.be.below(200);\r",
+              "});\r",
+              "\r",
+              ""
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n  \"email\": \"newadmin10233@test.com\",\r\n  \"password\": \"123456\",\r\n  \"name\": \"Test Admin\",\r\n  \"role\": \"admin\"\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{Base-URL}}/register",
+          "host": ["{{Base-URL}}"],
+          "path": ["register"]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Login-As-Admin",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "var responseBody = pm.response.json();\r",
+              "\r",
+              "let adminToken = responseBody.accessToken;\r",
+              "pm.environment.set(\"adminToken\", adminToken);\r",
+              "\r",
+              "pm.test(\"Token is set in environment\", function () {\r",
+              "    pm.expect(adminToken).to.not.be.null;\r",
+              "});\r",
+              "\r",
+              "pm.test(\"Successfull Admin Login\", function () {\r",
+              "    pm.response.to.have.status(200);\r",
+              "});\r",
+              "\r",
+              "pm.test(\"Response time\", function () {\r",
+              "    pm.expect(pm.response.responseTime).to.be.below(200);\r",
+              "});"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n    \"email\": \"{{adminEmail}}\",\r\n    \"password\": \"{{adminPassword}}\"\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{Base-URL}}/login",
+          "host": ["{{Base-URL}}"],
+          "path": ["login"]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Get-All-Users",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status code is 200\", function () {\r",
+              "    pm.response.to.have.status(200);\r",
+              "});\r",
+              "\r",
+              "pm.test(\"Response time is less than 200ms\", function () {\r",
+              "    pm.expect(pm.response.responseTime).to.be.below(200);\r",
+              "});\r",
+              ""
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{adminToken}}",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{Base-URL}}/users",
+          "host": ["{{Base-URL}}"],
+          "path": ["users"]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Add-New-Product",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"New Product added to the list\", function () {\r",
+              "    pm.response.to.have.status(201);\r",
+              "});\r",
+              "\r",
+              "var responseBody = pm.response.json();\r",
+              "pm.test(\"Product title is correct\", function () {\r",
+              "    pm.expect(responseBody.title).to.eql(\"Mocha\");\r",
+              "});\r",
+              "pm.test(\"Product category is correct\", function () {\r",
+              "    pm.expect(responseBody.category).to.eql(\"Drinks\");\r",
+              "});\r",
+              "\r",
+              "let productID = responseBody.id;\r",
+              "pm.environment.set(\"productID\", productID);\r",
+              "\r",
+              ""
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{token}}",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n  \"title\": \"Mocha\",\r\n  \"category\": \"Drinks\",\r\n  \"price\": 70,\r\n  \"stock\": 15\r\n}\r\n",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{Base-URL}}/products",
+          "host": ["{{Base-URL}}"],
+          "path": ["products"]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Get-Added-Product",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "var responseBody = pm.response.json(); \r",
+              "let expectedId = pm.environment.get(\"productID\");\r",
+              "\r",
+              "\r",
+              "pm.test(\"Product id is correct\", function () {\r",
+              "    pm.expect(responseBody.id).to.eql(expectedId);\r",
+              "});\r",
+              ""
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{Base-URL}}/products/{{productID}}",
+          "host": ["{{Base-URL}}"],
+          "path": ["products", "{{productID}}"]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Update-Product",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Product updated successfully\", function () {\r",
+              "    pm.response.to.have.status(200);\r",
+              "});\r",
+              "\r",
+              "pm.test(\"Response time is less than 200ms\", function () {\r",
+              "    pm.expect(pm.response.responseTime).to.be.below(200);\r",
+              "});"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{adminToken}}",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "PUT",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n  \"title\": \"Espresso (Updated)\",\r\n  \"category\": \"Drinks\",\r\n  \"price\": 50,\r\n  \"stock\": 18\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{Base-URL}}/products/{{productID}}",
+          "host": ["{{Base-URL}}"],
+          "path": ["products", "{{productID}}"]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Delete-Added-Product",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Product Deleted Successfully\", function () {\r",
+              "    pm.response.to.have.status(200);\r",
+              "});\r",
+              "\r",
+              "pm.test(\"Response time is less than 200ms\", function () {\r",
+              "    pm.expect(pm.response.responseTime).to.be.below(200);\r",
+              "});\r",
+              ""
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{adminToken}}",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "DELETE",
+        "header": [],
+        "url": {
+          "raw": "{{Base-URL}}/products/{{productID}}",
+          "host": ["{{Base-URL}}"],
+          "path": ["products", "{{productID}}"]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "View-All-Orders",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"orders found\", function () {\r",
+              "    pm.response.to.have.status(200);\r",
+              "});\r",
+              "\r",
+              "pm.test(\"Response time is less than 200ms\", function () {\r",
+              "    pm.expect(pm.response.responseTime).to.be.below(200);\r",
+              "});"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{adminToken}}",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{Base-URL}}/orders",
+          "host": ["{{Base-URL}}"],
+          "path": ["orders"]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Update-Order-Status",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status code is 200\", function () {\r",
+              "    pm.response.to.have.status(200);\r",
+              "});\r",
+              "\r",
+              "pm.test(\"Response time is less than 200ms\", function () {\r",
+              "    pm.expect(pm.response.responseTime).to.be.below(200);\r",
+              "});"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{adminToken}}",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "PATCH",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n    \"status\": \"completed\"\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{Base-URL}}/orders/6",
+          "host": ["{{Base-URL}}"],
+          "path": ["orders", "6"]
+        }
+      },
+      "response": []
+    }
+  ]
+}
